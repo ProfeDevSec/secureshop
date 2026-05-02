@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Exportar Logs{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('reports.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
+    <i class="bi bi-arrow-left me-1"></i>Volver a reportes
+</a>
+<h3 class="mb-4"><i class="bi bi-journal-text me-2 text-secondary"></i>Registros del Sistema</h3>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Últimos 200 eventos</span>
+        <span class="badge bg-secondary">{{ logs|length }} registros</span>
+    </div>
+    <div class="card-body p-0" style="max-height:500px;overflow-y:auto;">
+        <table class="table table-sm table-hover mb-0 align-middle font-monospace" style="font-size:.8rem;">
+            <thead class="table-dark sticky-top">
+                <tr>
+                    <th>Fecha</th><th>Nivel</th><th>Usuario</th><th>IP</th><th>Mensaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td class="text-muted">{{ log.created_at }}</td>
+                    <td>
+                        <span class="badge {% if 'FAIL' in log.nivel %}bg-danger{% elif 'OK' in log.nivel %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ log.nivel }}
+                        </span>
+                    </td>
+                    <td>{{ log.usuario }}</td>
+                    <td>{{ log.ip }}</td>
+                    <td>{{ log.mensaje or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

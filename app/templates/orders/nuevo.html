@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Pedido{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('orders.lista') }}" class="btn btn-sm btn-outline-secondary mb-3">
+    <i class="bi bi-arrow-left me-1"></i>Volver a pedidos
+</a>
+<h3 class="mb-4"><i class="bi bi-cart-plus me-2 text-primary"></i>Crear Nuevo Pedido</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('orders.nuevo') }}">
+
+                    <input type="hidden" name="prefs_token" value="{{ prefs_token }}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Producto</label>
+                        <select name="producto_id" class="form-select" required>
+                            <option value="">— Selecciona un producto —</option>
+                            {% for p in productos %}
+                            <option value="{{ p.id }}">{{ p.nombre }} — ${{ "{:,.0f}".format(p.precio) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Cantidad</label>
+                        <input type="number" name="cantidad" class="form-control"
+                               min="1" max="100" value="1" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Notas de entrega</label>
+                        <textarea name="notas" class="form-control" rows="3"
+                                  placeholder="Instrucciones especiales, dirección, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-lg me-1"></i>Confirmar Pedido
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

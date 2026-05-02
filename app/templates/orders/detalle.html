@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Pedido #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('orders.lista') }}" class="btn btn-sm btn-outline-secondary mb-3">
+    <i class="bi bi-arrow-left me-1"></i>Volver a pedidos
+</a>
+<h3 class="mb-4">
+    <i class="bi bi-receipt me-2 text-primary"></i>Detalle del Pedido #{{ pedido.id }}
+</h3>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light fw-semibold">Información del pedido</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Cliente</dt>
+                    <dd class="col-7">{{ pedido.username }}</dd>
+                    <dt class="col-5">Email</dt>
+                    <dd class="col-7 small">{{ pedido.email }}</dd>
+                    <dt class="col-5">Estado</dt>
+                    <dd class="col-7">
+                        <span class="badge {% if pedido.estado == 'completado' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            {{ pedido.estado }}
+                        </span>
+                    </dd>
+                    <dt class="col-5">Total</dt>
+                    <dd class="col-7 fw-bold text-primary">${{ "{:,.0f}".format(pedido.total) }}</dd>
+                    <dt class="col-5">Fecha</dt>
+                    <dd class="col-7 small text-muted">{{ pedido.created_at }}</dd>
+                </dl>
+                {% if pedido.notas %}
+                <hr>
+                <p class="small mb-0"><strong>Notas:</strong> {{ pedido.notas }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light fw-semibold">Ítems del pedido</div>
+            <div class="card-body p-0">
+                <table class="table mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td><code class="small">{{ item.sku }}</code></td>
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>${{ "{:,.0f}".format(item.precio_unit) }}</td>
+                            <td class="fw-semibold">${{ "{:,.0f}".format(item.cantidad * item.precio_unit) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
