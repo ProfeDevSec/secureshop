@@ -55,14 +55,18 @@ pipeline {
                 '''
             }
         }
-        stage('Deploy') {
+        stage('Deploy Container') {
             steps {
                 sh '''
-                    mkdir -p deploy
+                    docker rm -f secureshop || true
 
-                    cp -r . deploy/secureshop
+                    docker build -t secureshop:latest .
+
+                    docker run -d \
+                        --name secureshop \
+                        -p 5000:5000 \
+                        secureshop:latest
                 '''
-                echo 'Aplicación desplegada en carpeta deploy'
             }
         }
     }
